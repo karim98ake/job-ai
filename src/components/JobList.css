@@ -1,0 +1,325 @@
+body {
+  font-family: "Open Sans", sans-serif;
+  background-color: #f8f9fa;
+}
+
+.container {
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+h1 {
+  color: #008055;
+}
+
+/* Job Cards */
+.card {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+  color: #008055;
+}
+
+.card-content {
+  padding: 20px;
+}
+
+.card-footer {
+  background-color: #f1f1f1;
+  padding: 10px 20px;
+  border-top: 1px solid #dee2e6;
+}
+
+/* Buttons */
+.button {
+  background-color: #008055;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #006644;
+}
+
+.button-outline {
+  background-color: transparent;
+  color: #008055;
+  border: 1px solid #008055;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.button-outline:hover {
+  background-color: #008055;
+  color: #ffffff;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  justify-content: center;
+}
+
+.pagination li {
+  margin: 0 5px;
+}
+
+.pagination li a {
+  color: #008055;
+  text-decoration: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #dee2e6;
+  transition: background-color 0.3s;
+}
+
+.pagination li a:hover {
+  background-color: #f8f9fa;
+}
+
+.pagination li a.active {
+  background-color: #008055;
+  color: white;
+  border-color: #008055;
+}
+
+.pagination li a.disabled {
+  color: #6c757d;
+  pointer-events: none;
+  border-color: #dee2e6;
+}
+
+/* Chatbot Container */
+.chatbot-container {
+  border-top: 1px solid #dee2e6;
+  padding-top: 20px;
+}
+@import url("https://fonts.googleapis.com/css2?family=Spartan:wght@100&display=swap");
+
+body {
+  font-family: "Spartan", sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+header {
+  width: 100vw;
+  height: 150px;
+  background-color: #5da5a4;
+}
+
+header img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.container {
+  padding-top: 70px;
+  padding-bottom: 70px;
+}
+
+.filter-tags-c {
+  background-color: white;
+  padding: 10px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  border-radius: 5px;
+  margin-top: -105px;
+  box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
+}
+.search-container {
+  margin-bottom: 50px;
+}
+.search-job {
+  height: 100vh;
+  background-color: white;
+  padding: calc(var(--unit) * 40);
+  padding-top: 9%;
+  width: calc(var(--unit) * 380);
+  z-index: 100;
+  border-right: calc(var(--unit) * 1) solid black;
+}
+.search-job h2 {
+  font-size: calc(var(--unit) * 22);
+  font-weight: 600;
+}
+.search-job p {
+  font-size: calc(var(--unit) * 14);
+}
+
+.form-input {
+  border: calc(var(--unit) * 2) solid rgba(0, 0, 0, 0.5) !important;
+  padding: calc(var(--unit) * 6) calc(var(--unit) * 20);
+  border-radius: calc(var(--unit) * 10);
+  outline: none !important;
+  margin-bottom: calc(var(--unit) * 10);
+}
+.search-job button {
+  padding: calc(var(--unit) * 15) calc(var(--unit) * 20);
+  border-radius: calc(var(--unit) * 10);
+  outline: none !important;
+  background-color: black !important;
+}
+.form-input > input {
+  border: none !important;
+  outline: none !important;
+}
+.form-input > input:focus-visible {
+  border: none !important;
+  outline: none !important;
+  --tw-ring-offset-shadow: none;
+}
+
+.search-job .form-control {
+  max-width: 250px;
+  display: inline-flex;
+  margin: 10px 5px;
+  height: 50px;
+  border-radius: 25px;
+  box-shadow: none !important;
+  border: 2px solid #58a9a7; /* Change to the color you want */
+  background-color: #fff; /* Change to the color you want */
+  padding-left: 30px;
+  color: #58a9a7; /* Change to the color you want */
+}
+
+.search-job .form-control::placeholder {
+  color: #58a9a7; /* Change to the color you want */
+}
+
+.search-job .btn-primary {
+  width: 150px;
+  border-radius: 25px;
+  box-shadow: none !important;
+  border: none;
+  height: 50px;
+  margin: 5px;
+  padding: 5px 20px;
+  display: table-cell;
+  vertical-align: middle;
+  background-color: #007bff;
+  color: #fff;
+}
+.tag {
+  border: 1px solid lightgray;
+  border-radius: 100px;
+  padding: calc(var(--unit) * 8) calc(var(--unit) * 15);
+  font-size: calc(var(--unit) * 10);
+  font-weight: 500;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  max-width: calc(var(--unit) * 80);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-job .btn-primary:hover {
+  border: 1px solid yellow;
+}
+.cards-section {
+  margin-left: calc(var(--unit) * 400);
+  padding: calc(var(--unit) * 20);
+}
+.job-card {
+  width: 31%;
+  overflow: hidden;
+  height: calc(var(--unit) * 330);
+  border-radius: calc(var(--unit) * 15);
+  padding: calc(var(--unit) * 20);
+  background: linear-gradient(
+    180deg,
+    rgba(254, 179, 179, 0.4) 17%,
+    rgba(255, 255, 255, 1) 60%
+  );
+
+  border: calc(var(--unit) * 1) solid rgba(180, 180, 180, 0.2);
+  box-shadow: rgba(149, 157, 165, 0.1) 0px 8px 24px;
+}
+.job-card h3 {
+  line-height: calc(var(--unit) * 53);
+  margin-top: calc(var(--unit) * 10);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.job-card button {
+  width: 100%;
+  border-radius: calc(var(--unit) * 15);
+  padding: calc(var(--unit) * 10);
+}
+.job-card p {
+  font-size: calc(var(--unit) * 16);
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.job-status {
+  position: absolute;
+  top: 8%;
+  right: -15%;
+  padding: calc(var(--unit) * 5);
+  background-color: red;
+  transform: rotate(45deg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: calc(var(--unit) * 190) !important;
+  color: white;
+}
+.job-status p {
+  padding: 0 !important;
+  margin: auto !important;
+  margin-bottom: 0 !important;
+  width: 100%;
+  text-align: center;
+}
+.job-status.featured {
+  background-color: rgb(54, 54, 255);
+}
+@media (max-width: 480px) {
+  :root {
+    --unit: 0.24132vw;
+  }
+  .search-job {
+    height: fit-content !important;
+    background-color: white;
+    padding: calc(var(--unit) * 20);
+    padding-top: 20%;
+    width: 100%;
+    border-right: calc(var(--unit) * 0) solid black;
+  }
+  .cards-section {
+    margin-left: calc(var(--unit) * 0);
+    padding: calc(var(--unit) * 20);
+  }
+  .job-card {
+    width: 100%;
+  }
+}
