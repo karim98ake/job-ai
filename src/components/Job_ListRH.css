@@ -1,0 +1,24 @@
+/* JobListRH.css */
+.job-list-rh .job-card-rh {
+    background: linear-gradient(
+      180deg,
+      rgba(179, 217, 254, 0.4) 17%,
+      rgba(255, 255, 255, 1) 60%
+    ) !important;
+    border: calc(var(--unit) * 1) solid rgba(180, 180, 180, 0.2) !important;
+    box-shadow: rgba(149, 157, 165, 0.1) 0px 8px 24px !important;
+  }
+  
+  .job-card-rh h3 {
+    color: #0066cc !important;
+  }
+  
+  .job-card-rh button {
+    background-color: #0066cc !important;
+    color: #ffffff !important;
+  }
+  
+  .job-card-rh .job-status {
+    background-color: #0066cc !important;
+  }
+  

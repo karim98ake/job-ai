@@ -1,59 +1,65 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import ReactPaginate from "react-paginate";
 import axios from "axios";
-import "./JobList.css";
 import Navbar from "./Navbar";
 import searchGray from "../assets/search-gray.svg";
 import student from "../assets/student.svg";
-
 import JobCard from "./JobCard";
+import { ChatContext } from "../App";
+import "./JobList.css";
+import Sidebar from "./Sidebar";
+import JobCardWithModifyDelete from "./JobCardWithModifyDelete";
 
 function JobList() {
   const [jobs, setJobs] = useState([
     {
       job_id: 1,
-      job_title: "Software Engineer",
-      job_description: "Develop and maintain web applications.",
       work_type: "Full-time",
-      job_qualification: "JavaScript, React, Node.js, CSS",
+      job_title: "Software Engineer",
+      job_description:
+        "We are looking for a skilled software engineer to join our team.",
+      job_qualification: "JavaScript, React, Node.js, Python",
       new: true,
       featured: true,
     },
     {
       job_id: 2,
+      work_type: "Part-time",
       job_title: "Product Manager",
-      job_description: "Lead product development teams.",
-      work_type: "Full-time",
-      job_qualification: "Leadership, Agile, Communication",
-      new: true,
+      job_description:
+        "Seeking an experienced product manager to lead our product team.",
+      job_qualification: "Product Management, Agile, Scrum, Communication",
+      new: false,
       featured: false,
     },
     {
       job_id: 3,
+      work_type: "Contract",
+      job_title: "Data Scientist",
+      job_description:
+        "Looking for a data scientist with experience in machine learning and data analysis.",
+      job_qualification: "Python, R, Machine Learning, Data Analysis",
+      new: true,
+      featured: false,
+    },
+    {
+      job_id: 4,
+      work_type: "Full-time",
       job_title: "UI/UX Designer",
-      job_description: "Design user interfaces and experiences.",
-      work_type: "Part-time",
-      job_qualification: "Sketch, Figma, Adobe XD, CSS",
+      job_description:
+        "We need a creative UI/UX designer to enhance our user experience.",
+      job_qualification: "UI/UX Design, Figma, Sketch, Adobe XD",
       new: false,
       featured: true,
     },
     {
-      job_id: 4,
-      job_title: "Data Scientist",
-      job_description: "Analyze and interpret complex data sets.",
-      work_type: "Full-time",
-      job_qualification: "Python, R, SQL, Machine Learning",
-      new: false,
-      featured: false,
-    },
-    {
       job_id: 5,
-      job_title: "DevOps Engineer",
-      job_description: "Manage and automate cloud infrastructure.",
-      work_type: "Contract",
-      job_qualification: "AWS, Docker, Kubernetes, Terraform",
+      work_type: "Internship",
+      job_title: "Marketing Intern",
+      job_description:
+        "Join our marketing team and gain valuable industry experience.",
+      job_qualification: "Marketing, Social Media, Communication, Creativity",
       new: true,
       featured: true,
     },
@@ -61,68 +67,68 @@ function JobList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [location, setLocation] = useState("");
   const [experience, setExperience] = useState("");
+  const [openSidebar, setOpenSidebar] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const jobsPerPage = 10;
   const navigate = useNavigate();
+  const { showChat, toggleChat } = useContext(ChatContext);
 
   useEffect(() => {
     // const fetchJobs = async () => {
-    //   const token = localStorage.getItem('token');
+    //   const token = localStorage.getItem("token");
     //   if (token) {
     //     try {
-    //       const response = await fetch('http://localhost:8000/api/jobs/', {
-    //         method: 'GET',
+    //       const response = await fetch("http://localhost:8000/api/jobs/", {
+    //         method: "GET",
     //       });
     //       const data = await response.json();
-    //       setJobs(data);
+    //       // Filter jobs that are ready
+    //       const readyJobs = data.filter((job) => job.is_ready);
+    //       setJobs(readyJobs);
     //     } catch (error) {
-    //       console.error('Error fetching jobs:', error);
+    //       console.error("Error fetching jobs:", error);
     //     }
     //   } else {
-    //     navigate('./login');
+    //     navigate("./login");
     //   }
     // };
     // fetchJobs();
-  }, [navigate]);
+    // toggleChat(false);
+  }, []);
 
-  const handleApply = async (jobId) => {
-    // const token = localStorage.getItem("token");
-    // try {
-    //   const response = await axios.post(
-    //     "http://localhost:8000/api/apply/",
-    //     { job_id: `${jobId}` },
-    //     {
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //     }
-    //   );
-    //   console.log(response.data);
-    //   navigate("/chatbot-interface", { state: { jobId } });
-    // } catch (error) {
-    //   console.error("Error applying for job:", error);
-    //   if (error.response) {
-    //     console.error("Response data:", error.response.data);
-    //   }
-    // }
+  const handleApply = async (job) => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/apply/",
+        { job_id: job.job_id },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response.data);
+      navigate(`/chatbot-interface`, { state: { job } });
+    } catch (error) {
+      console.error("Error applying for job:", error);
+      if (error.response) {
+        console.error("Response data:", error.response.data);
+      }
+    }
   };
 
   const handlePageClick = (data) => {
-    setCurrentPage(data.selected);
+    // setCurrentPage(data.selected);
   };
 
-  // const pageCount = Math.ceil(jobs.length / jobsPerPage);
-  // const offset = currentPage * jobsPerPage;
-
-  // const filteredJobs = jobs.filter(
-  //   (job) =>
-  //     job.job_title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-  //     job.work_type.toLowerCase().includes(location.toLowerCase()) &&
-  //     job.job_qualification.toLowerCase().includes(experience.toLowerCase())
-  // );
-
-  // const currentJobs = filteredJobs.slice(offset, offset + jobsPerPage);
+  const filteredJobs = jobs.filter(
+    (job) =>
+      job.job_title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      job.work_type.toLowerCase().includes(location.toLowerCase()) &&
+      job.job_qualification.toLowerCase().includes(experience.toLowerCase())
+  );
 
   return (
     <>
@@ -142,7 +148,7 @@ function JobList() {
               <img src={searchGray} alt="" />
               <input
                 id="search"
-                placeholder="Job , Skills"
+                placeholder="Job Title, Skills"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -151,7 +157,7 @@ function JobList() {
               <img src={searchGray} alt="" />
               <input
                 id="location"
-                placeholder="Remote , On site"
+                placeholder="Location (e.g., Remote, On-site)"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
               />
@@ -160,7 +166,7 @@ function JobList() {
               <img src={student} alt="" />
               <input
                 id="experience"
-                placeholder="master , Bachelor"
+                placeholder="Experience Level (e.g., Master's, Bachelor's)"
                 value={experience}
                 onChange={(e) => setExperience(e.target.value)}
               />
@@ -174,27 +180,32 @@ function JobList() {
             </button>
           </div>
 
+          {/* // if the hr is on */}
+          <div className="cards-section flex justify-between items-center ml-[30%] mt-[5%]">
+            <h2>All jobs</h2>
+            <button
+              className="gradiant cursor-pointer btn "
+              onClick={() => setOpenSidebar(true)}
+            >
+              Add New Job
+            </button>
+          </div>
+          {openSidebar && (
+            <Sidebar name="create" setOpenSidebar={setOpenSidebar} />
+          )}
+          {/* // if the hr is on */}
           <div className="cards-section flex flex-wrap gap-3 items-center ml-[30%] mt-[5%]">
-            {jobs.length > 0 ? (
-              jobs.map((job) => <JobCard job={job} />)
+            {filteredJobs.length > 0 ? (
+              filteredJobs.map((job) => (
+                <JobCardWithModifyDelete
+                  key={job.job_id}
+                  job={job}
+                  handleApply={() => handleApply(job)}
+                />
+              ))
             ) : (
               <p className="text-center">No jobs available.</p>
             )}
-          </div>
-          <div className="mt-8">
-            {/* <ReactPaginate
-            previousLabel={"Previous"}
-            nextLabel={"Next"}
-            breakLabel={"..."}
-            breakClassName={"break-me"}
-            pageCount={pageCount}
-            marginPagesDisplayed={2}
-            pageRangeDisplayed={5}
-            onPageChange={handlePageClick}
-            containerClassName={"pagination"}
-            subContainerClassName={"pages pagination"}
-            activeClassName={"active"}
-          /> */}
           </div>
         </main>
       </div>
