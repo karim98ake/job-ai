@@ -2,7 +2,10 @@ import React from 'react';
 import send from '../assets/send.svg';
 import jobIcon from '../assets/job.svg';
 
-function JobCard({ job, handleApply , chatBot}) {
+function JobCard({ job, handleApply, chatBot }) {
+  // Log the job object to the console
+  console.log("Job data:", job);
+
   const tags = (job) => {
     let tags = job.split(',');
     return (
@@ -15,6 +18,9 @@ function JobCard({ job, handleApply , chatBot}) {
       </div>
     );
   };
+
+  
+  const applicationCount = job.application_count;
 
   return (
     <div
@@ -32,26 +38,29 @@ function JobCard({ job, handleApply , chatBot}) {
       <div className="flex flex-wrap items-center gap-1">
         <article>{job.job_qualification && tags(job.job_qualification)}</article>
       </div>
+      <p>{applicationCount} personne(s) applied for this job</p>
       {job.featured && (
         <div className="job-status featured">
-          <p>featured</p>
+          <p>Featured</p>
         </div>
       )}
-      {job.new && (
+      {job.is_active ? (
         <div className="job-status">
           <p>New</p>
         </div>
+      ) : (
+        <div className="job-status">
+          <p>Hired</p>
+        </div>
       )}
-      {/* Apply button */}
- 
       {!chatBot && (
-      <button
-      onClick={() => handleApply(job.job_id)}
-      className="bg-black w-full flex items-center justify-center gap-3 text-white px-10 mt-auto rounded-lg"
-    >
-      <img src={send} alt="" />
-      Apply here!
-    </button>
+        <button
+          onClick={() => handleApply(job.job_id)}
+          className="bg-black w-full flex items-center justify-center gap-3 text-white px-10 mt-auto rounded-lg"
+        >
+          <img src={send} alt="" />
+          Apply here!
+        </button>
       )}
     </div>
   );

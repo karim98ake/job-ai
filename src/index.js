@@ -8,6 +8,7 @@ import ReactDOM from 'react-dom';
 import './styles.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import './components/ChatbotInterface.css';
+
 const container = document.getElementById('root');
 const root = createRoot(container);
 

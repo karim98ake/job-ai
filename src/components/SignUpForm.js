@@ -40,7 +40,7 @@ const SignUpForm = () => {
     const data = await response.json();
     if (response.ok) {
       alert('User created successfully');
-      navigate('/signin');  // Redirect to the sign-in page
+      navigate('/signin');   
     } else {
       setMessage(data.errors);
     }

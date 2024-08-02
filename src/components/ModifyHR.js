@@ -4,6 +4,21 @@ import Navbar from './navbarHR';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card';
 import './profile.css';
 
+const checkTokenExpiration = (token) => {
+  if (!token) {
+    return true;
+  }
+
+  try {
+    const decodedToken = JSON.parse(atob(token.split('.')[1]));
+    const exp = decodedToken.exp * 1000;
+    return Date.now() >= exp;
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return true;
+  }
+};
+
 function ModifyUser() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -17,12 +32,18 @@ function ModifyUser() {
 
   useEffect(() => {
     if (!user) {
-      navigate('/'); 
+      navigate('/');
+    }
+
+    const token = localStorage.getItem('token');
+    if (checkTokenExpiration(token)) {
+      navigate('/signin', { replace: true });
+      return;
     }
   }, [user, navigate]);
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
@@ -35,8 +56,8 @@ function ModifyUser() {
         last_name: formData.last_name,
         email: formData.email,
       };
-  
-      const response = await fetch(`/api/collaborateur/${user.user_id}/edit/`, {
+
+      const response = await fetch(`/api/users/${user.user_id}/edit/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -44,7 +65,7 @@ function ModifyUser() {
         },
         body: JSON.stringify(formDataToSend),
       });
-  
+
       if (response.ok) {
         navigate('/ProfileHR');
       } else {
@@ -56,41 +77,89 @@ function ModifyUser() {
       console.error('Error updating user data:', error);
     }
   };
-  
 
   return (
     <>
       <Navbar />
-      <div className="profile-page">
-        <div className="profile-header">
-          <h1>Modify collaborateur Information</h1>
+      <div className="mt-[5%] max-sm:mt-[20%]">
+        <div className="w-[90%] mx-auto py-10">
+          <h2 className="profile-title text-start mb-10 max-sm:mb-6">
+            Modify User Information
+          </h2>
+          <Card className="profile-card">
+            <CardHeader>
+              <CardTitle className="profile-title">Personal Info</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex gap-6 max-sm:flex-col mb-4">
+                <div className="w-[20%] max-sm:w-full h-[200px] border border-gray-400 rounded-lg relative mb-4 p-4">
+                  <div className="text-center">
+                    <img src={user.image || 'https://bootdey.com/img/Content/avatar/avatar7.png'} className="avatar img-circle img-thumbnail" alt="Profile" />
+                  </div>
+                </div>
+                <div className="w-[80%] max-sm:w-full">
+                  <form className="form-horizontal" role="form" onSubmit={handleSubmit}>
+                    <div className="flex w-full gap-6 max-sm:gap-2 max-sm:flex-col mb-4">
+                      <div className="form__div mb-0 flex-1 ">
+                        <input
+                          className="form__input w-full"
+                          type="text"
+                          name="first_name"
+                          value={formData.first_name}
+                          onChange={handleChange}
+                          required
+                        />
+                        <label className="form__label">First Name</label>
+                        {errors.first_name && <span className="error">{errors.first_name}</span>}
+                      </div>
+                      <div className="form__div mb-0 flex-1">
+                        <input
+                          className="form__input w-full"
+                          type="text"
+                          name="last_name"
+                          value={formData.last_name}
+                          onChange={handleChange}
+                          required
+                        />
+                        <label className="form__label">Last Name</label>
+                        {errors.last_name && <span className="error">{errors.last_name}</span>}
+                      </div>
+                    </div>
+                    <div className="flex w-full gap-6 max-sm:gap-2 max-sm:flex-col mb-4 ">
+                      <div className="form__div mb-0 flex-1">
+                        <input
+                          className="form__input w-full"
+                          type="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          required
+                        />
+                        <label className="form__label">Email</label>
+                        {errors.email && <span className="error">{errors.email}</span>}
+                      </div>
+                    </div>
+                    <div className="flex justify-end">
+                      <button
+                        type="button"
+                        className="btn cancel-btn text-black"
+                        onClick={() => navigate("/profile")}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="btn save-btn text-black"
+                      >
+                        Save
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
-        <Card className="profile-card">
-          <CardHeader>
-            <CardTitle className="profile-title">Modify Information</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="profile-info">
-              <div className="form-group">
-                <label>First Name:</label>
-                <input type="text" name="first_name" value={formData.first_name} onChange={handleChange} required />
-                {errors.first_name && <span className="error">{errors.first_name}</span>}
-              </div>
-              <div className="form-group">
-                <label>Last Name:</label>
-                <input type="text" name="last_name" value={formData.last_name} onChange={handleChange} required />
-                {errors.last_name && <span className="error">{errors.last_name}</span>}
-              </div>
-              <div className="form-group">
-                <label>Email:</label>
-                <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-                {errors.email && <span className="error">{errors.email}</span>}
-              </div>
-              <button type="submit" className="btn save-btn text-black">Save</button>
-              <button type="button" className="btn cancel-btn text-black" onClick={() => navigate('/profile')}>Cancel</button>
-            </form>
-          </CardContent>
-        </Card>
       </div>
     </>
   );

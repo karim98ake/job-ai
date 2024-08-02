@@ -101,7 +101,7 @@ function Navbar() {
               <img src={arrow} alt="Arrow" />
             </button>
             {showDropdown && (
-              <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md py-2 z-50">
+              <div className="absolute top-10 right-0 mt-2 w-48 bg-white shadow-lg rounded-md py-2 z-50">
                 <Link to="/profile" className="block px-4 py-2 text-gray-800 hover:bg-gray-200">Profile</Link>
                 <button 
                   onClick={handleLogout} 
@@ -123,12 +123,6 @@ function Navbar() {
           </div>
         )}
       </div>
-      <button
-        onClick={() => setShowNav(!showNav)}
-        className="bg-red-100 text-white w-fit hidden max-sm:flex max-sm:order-1"
-      >
-        <img src={search} alt="Search" />
-      </button>
     </nav>
   );
 }

@@ -50,7 +50,7 @@ function HomePage() {
           seeking exceptional skills
         </p>
 
-        <Link to={"/login"} className="gradiant cursor-pointer btn home-btn">
+        <Link to={"/job-list"} className="gradiant cursor-pointer btn home-btn">
           START HERE
         </Link>
       </section>

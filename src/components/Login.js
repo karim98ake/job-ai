@@ -1,4 +1,4 @@
-import React, {useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { ChatContext } from '../App';
@@ -11,6 +11,7 @@ import {
 } from "./ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+
 export function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -18,6 +19,7 @@ export function Login() {
   const [darkMode, setDarkMode] = useState(false);
   const navigate = useNavigate();
   const { showChat, toggleChat } = useContext(ChatContext);
+
   const checkTokenExpiration = (token) => {
     if (!token) {
       return false;
@@ -25,8 +27,7 @@ export function Login() {
 
     try {
       const decodedToken = JSON.parse(atob(token.split('.')[1]));
-      const exp = decodedToken.exp * 1000; 
-
+      const exp = decodedToken.exp * 1000;
 
       if (Date.now() >= exp) {
         localStorage.removeItem('token');
@@ -48,14 +49,21 @@ export function Login() {
       if (hasExpired) {
         navigate('/login', { replace: true });
       } else {
-        navigate('/job-list', { replace: true });
+        const role = localStorage.getItem('role');
+        if (role === 'candidate') {
+          navigate('/job-list', { replace: true });
+        } else if (role === 'professional') {
+          navigate('/jobs', { replace: true });
+        }
       }
     }
     toggleChat(false)
   }, [navigate]);
+
   useEffect(() => {
     const interval = setInterval(() => {
       const token = localStorage.getItem('token');
+      
       if (token) {
         const hasExpired = checkTokenExpiration(token);
         if (hasExpired) {
@@ -81,21 +89,30 @@ export function Login() {
 
       const data = await response.json();
       if (!response.ok) {
-        setMessage('Login failed: ' + JSON.stringify(data));
+        if (data.errors && data.errors.__all__) {
+          setMessage(data.errors.__all__[0].message);
+        } else {
+          setMessage('Login failed');
+        }
         return;
       }
 
       if (data.success) {
         localStorage.setItem('token', data.token);
-        navigate('/job-list');
+        localStorage.setItem('role', data.role);
+
+        if (data.role === 'candidate') {
+          navigate('/job-list');
+        } else if (data.role === 'professional') {
+          navigate('/jobs');
+        }
       } else {
-        setMessage('Login failed: ' + JSON.stringify(data.errors));
+        setMessage('Invalid email or password');
       }
     } catch (error) {
       setMessage('Error during login: ' + error.message);
     }
   };
-
 
 
   const toggleDarkMode = () => {
@@ -113,62 +130,40 @@ export function Login() {
   }, [darkMode]);
 
   return (
-    <div className="mt-10">
-      <Card className="mx-auto max-w-sm">
-        <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit}>
-            <div className="grid gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  <Link to="/forgot-password" className="ml-auto inline-block text-sm underline">
-                    Forgot your password?
-                  </Link>
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <Button type="submit" className="w-full">
-                Login
-              </Button>
-              <Button variant="outline" className="w-full">
-                Login with Google
-              </Button>
-            </div>
-          </form>
-          <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{" "}
-            <Link to="/Register" className="underline">
-                Sign in
-            </Link>
+    <div className="login-container overflow-hidden w-[100vw]">
+    <div className="card login-card w-[35%]" >
+      <div className="card-body w-full">
+        <div className="login-header">
+          <img src="/assets/logo.jpg" alt="Logo" className="login-logo" />
+        </div>  
+        <h2 className="card-title">Welcome 👋</h2>
+        <p className="login-message">Please login here</p>
+        <form onSubmit={handleSubmit} className="form">
+          <div className="mb-3">
+            <label htmlFor="email" className="form-label">Email Address</label>
+            <input type="email" className="form-control" id="email" value={email}
+              onChange={e => setEmail(e.target.value)} required />
           </div>
-          {message && <p className="text-danger mt-3">{message}</p>}
-        </CardContent>
-      </Card>
+          <div className="mb-3">
+            <label htmlFor="password" className="form-label">Password</label>
+            <input type="password" className="form-control" id="password" value={password}
+              onChange={e => setPassword(e.target.value)} required />
+          </div>
+          <button type="submit" className="btn btn-primary w-100">Login</button>
+          <div className="text-center mt-4">
+            Don't have an account? <Link to="/register">Sign Up</Link>
+          </div>
+        </form>
+        {message && <div className="alert alert-danger" role="alert">{message}</div>}
+      </div>
     </div>
-  );
+    <div className="login-images overflow-hidden w-[100%] h-full relative ml-auto">
+      <img className='absolute top-[11%] right-[-21%] z-20' src="/assets/home.svg" alt="Home Icon"  />
+      <img className='absolute top-[-55%] right-[-25%] z-0' src="/assets/chat-empty.svg" alt="Chat Icon" />
+      <img className='absolute top-[-20%] right-[-10%] z-10' src="/assets/Job-List.svg" alt="Job List Icon" />
+    </div>
+  
+  </div>
+);
 }
-
 export default Login;

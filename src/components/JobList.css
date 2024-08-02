@@ -23,10 +23,10 @@ h1 {
   transition: transform 0.3s ease-in-out;
 }
 
-.card:hover {
+/* .card:hover {
   transform: translateY(-5px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+} */
 
 .card-title {
   color: #008055;
@@ -172,7 +172,8 @@ header img {
 
 .form-input {
   border: calc(var(--unit) * 2) solid rgba(0, 0, 0, 0.5) !important;
-  padding: calc(var(--unit) * 6) calc(var(--unit) * 20);
+  padding: calc(var(--unit) * 13) calc(var(--unit) * 20);
+  gap: calc(var(--unit) * 8);
   border-radius: calc(var(--unit) * 10);
   outline: none !important;
   margin-bottom: calc(var(--unit) * 10);
@@ -186,6 +187,9 @@ header img {
 .form-input > input {
   border: none !important;
   outline: none !important;
+}
+.form-input > input::placeholder {
+font-size: calc(var(--unit) * 15);
 }
 .form-input > input:focus-visible {
   border: none !important;
@@ -244,6 +248,7 @@ header img {
 .cards-section {
   margin-left: calc(var(--unit) * 400);
   padding: calc(var(--unit) * 20);
+  padding-left: calc(var(--unit) * 0);
 }
 .job-card {
   width: 31%;

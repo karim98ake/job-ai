@@ -1,179 +1,204 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card';
-import './profile.css';
-import Navbar from './navbarHR';
-const EditJobForm = () => {
-    const { jobId } = useParams();
-    const [job, setJob] = useState({
-        job_title: '',
-        job_description: '',
-        job_experience: '',
-        job_qualification: '',
-        salary_range: '',
-        work_type: '',
-        job_benefit: '',
-        job_skills: '',
-        job_responsibilities: '',
-        company_name: '',
-        seuil: 0.5,
-    });
-    const navigate = useNavigate();
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import close from "../assets/close.svg";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Card, CardTitle } from "./ui/card";
+import "./profile.css";
 
-    useEffect(() => {
-        axios.get(`/api/get-job/${jobId}/`)
-            .then(response => {
-                setJob(response.data);
-            })
-            .catch(error => {
-                console.error("There was an error fetching the job!", error);
-                toast.error("Error fetching job.");
-            });
-    }, [jobId]);
+const EditJobForm = ({ setOpenSidebar, openSidebar }) => {
+  const [job, setJob] = useState(openSidebar.job);
+  const navigate = useNavigate();
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        try {
-            await axios.post(`/api/edit-job/${jobId}/`, job);
-            toast.success("Job updated successfully.");
-            navigate('/jobs', { state: { updateSuccess: true } }); 
-        } catch (error) {
-            console.error("There was an error updating the job!", error);
-            toast.error("Error updating job.");
-        }
-    };
-    
+  useEffect(() => {
+    if (openSidebar.job) {
+      
+      axios.get(`/api/get-job/${openSidebar.job.job_id}/`)
+        .then(response => {
+          setJob(response.data);
+        })
+        .catch(error => {
+          console.error("Error fetching job details:", error);
+          toast.error("Error fetching job details.");
+        });
+    }
+  }, [openSidebar.job]);
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
+    try {
+      await axios.post(`/api/edit-job/${job.job_id}/`, job);
+      toast.success("Job edited successfully.");
+      setOpenSidebar(false);
+      
+    } catch (error) {
+      console.error("Error editing job:", error);
+      toast.error("Error editing job.");
+    }
+  };
 
-    const handleChange = (event) => {
-        const { name, value } = event.target;
-        setJob({ ...job, [name]: value });
-    };
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setJob({ ...job, [name]: value });
+  };
 
-    return (
-        <>
-        <Navbar />
-        <div>
-            <ToastContainer />
-            <div className="profile-page">
-                <Card className="profile-card" style={{ marginTop: '60px' }}>
-                    <CardHeader>
-                        <CardTitle className="profile-title">Edit Job</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <form onSubmit={handleSubmit} className="profile-info">
-                            <div className="form-group">
-                                <label>Job Title:</label>
-                                <input
-                                    type="text"
-                                    name="job_title"
-                                    value={job.job_title}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Job Description:</label>
-                                <textarea
-                                    name="job_description"
-                                    value={job.job_description}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Job Experience:</label>
-                                <input
-                                    type="text"
-                                    name="job_experience"
-                                    value={job.job_experience}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Job Qualification:</label>
-                                <input
-                                    type="text"
-                                    name="job_qualification"
-                                    value={job.job_qualification}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Salary Range:</label>
-                                <input
-                                    type="text"
-                                    name="salary_range"
-                                    value={job.salary_range}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Work Type:</label>
-                                <input
-                                    type="text"
-                                    name="work_type"
-                                    value={job.work_type}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Job Benefit:</label>
-                                <textarea
-                                    name="job_benefit"
-                                    value={job.job_benefit}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Job Skills:</label>
-                                <textarea
-                                    name="job_skills"
-                                    value={job.job_skills}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Job Responsibilities:</label>
-                                <textarea
-                                    name="job_responsibilities"
-                                    value={job.job_responsibilities}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Company Name:</label>
-                                <input
-                                    type="text"
-                                    name="company_name"
-                                    value={job.company_name}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Seuil:</label>
-                                <input
-                                    type="number"
-                                    name="seuil"
-                                    value={job.seuil}
-                                    step="0.01"
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <CardFooter className="profile-footer">
-                                <button type="submit" className="btn save-btn text-black">Update Job</button>
-                                <button type="button" className="btn cancel-btn text-black" onClick={() => navigate('/jobs')}>Cancel</button>
-                            </CardFooter>
-                        </form>
-                    </CardContent>
-                </Card>
-            </div>
+  return (
+    <div className="absolute right-0 top-0 rounded-none h-full max-sm:w-full w-[35%] overflow-auto">
+      <ToastContainer />
+      <Card className="p-6 rounded-none">
+        <div className="flex justify-between items-center mb-4 border-b border-gray-300 pb-3">
+          <CardTitle className="font-semibold text-[20px]">Edit Job</CardTitle>
+          <button onClick={() => setOpenSidebar(false)}>
+            <img src={close} alt="close" />
+          </button>
         </div>
-        </>
-    );
-    
+        <form onSubmit={handleSubmit} className="w-full relative pb-[15%] gap-4">
+          <div className="form__div">
+            <input
+              className="form__input w-full"
+              type="text"
+              name="job_title"
+              value={job.job_title || ""}
+              onChange={handleChange}
+              placeholder=" "
+            />
+            <label className="form__label">Job Title</label>
+          </div>
+          <div className="form__div text-area mt-4">
+            <textarea
+              name="job_description"
+              value={job.job_description || ""}
+              className="form__input w-full"
+              onChange={handleChange}
+            />
+            <label className="form__label">Job Description</label>
+          </div>
+          <div className="form__div">
+            <input
+              className="form__input w-full"
+              type="text"
+              name="job_experience"
+              value={job.job_experience || ""}
+              onChange={handleChange}
+              placeholder=" "
+            />
+            <label className="form__label">Job Experience</label>
+          </div>
+          <div className="form__div">
+            <input
+              className="form__input w-full"
+              type="text"
+              name="job_qualification"
+              value={job.job_qualification || ""}
+              onChange={handleChange}
+              placeholder=" "
+            />
+            <label className="form__label">Job Qualification</label>
+          </div>
+          <div className="form__div">
+            <input
+              className="form__input w-full"
+              type="text"
+              name="salary_range"
+              value={job.salary_range || ""}
+              onChange={handleChange}
+              placeholder=" "
+            />
+            <label className="form__label">Salary Range</label>
+          </div>
+          <div className="form__div">
+            <input
+              className="form__input w-full"
+              type="text"
+              name="work_type"
+              value={job.work_type || ""}
+              onChange={handleChange}
+              placeholder=" "
+            />
+            <label className="form__label">Work Type</label>
+          </div>
+          <div className="form__div text-area mt-4">
+            <textarea
+              name="job_benefit"
+              value={job.job_benefit || ""}
+              className="form__input w-full"
+              onChange={handleChange}
+            />
+            <label className="form__label">Job Benefit</label>
+          </div>
+          <div className="form__div text-area mt-4">
+            <textarea
+              name="job_skills"
+              value={job.job_skills || ""}
+              className="form__input w-full"
+              onChange={handleChange}
+            />
+            <label className="form__label">Job Skills</label>
+          </div>
+          <div className="form__div text-area mt-4">
+            <textarea
+              name="job_responsibilities"
+              value={job.job_responsibilities || ""}
+              className="form__input w-full"
+              onChange={handleChange}
+            />
+            <label className="form__label">Job Responsibilities</label>
+          </div>
+          <div className="form__div">
+            <input
+              className="form__input w-full"
+              type="text"
+              name="company_name"
+              value={job.company_name || ""}
+              onChange={handleChange}
+              placeholder=" "
+            />
+            <label className="form__label">Company Name</label>
+          </div>
+          <div className="form__div">
+            <input
+              className="form__input w-full"
+              type="number"
+              name="seuil"
+              value={job.seuil || ""}
+              step="0.01"
+              onChange={handleChange}
+              placeholder=" "
+            />
+            <label className="form__label">Seuil</label>
+          </div>
+
+          <div className="form__div">
+            <input
+              className="form__input w-full"
+              type="number"
+              name="required_candidates"
+              value={job.required_candidates|| ""}
+              step="0.01"
+              onChange={handleChange}
+              placeholder=" "
+            />
+            <label className="form__label">number of posts</label>
+          </div>
+
+          <div className="fixed bottom-0 py-2 right-[0.3%] w-[34%] max-sm:w-full shadow-lg flex justify-center items-center gap-4 z-10 bg-white">
+            <button
+              type="button"
+              className="btn cancel-btn w-[40%]"
+              onClick={() => setOpenSidebar(false)}
+            >
+              Cancel
+            </button>
+            <button type="submit" className="btn submit-btn w-[40%]">
+              Update Job
+            </button>
+          </div>
+        </form>
+      </Card>
+    </div>
+  );
 };
 
 export default EditJobForm;

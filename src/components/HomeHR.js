@@ -24,11 +24,7 @@ function HomePage() {
         src={circle3}
         alt=""
       />
-      {/* <img
-        className="absolute bottom-0 left-0 max-h-[400px] bg-cover w-[100vw]"
-        src={bg}
-        alt=""
-      /> */}
+      {}
       <Navbar />
       <section className="z-10 flex flex-col justify-center items-center pb-14">
         <h1 className="home-title">
