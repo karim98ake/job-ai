@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 import './ChatbotInterface.css';
 import Navbar from "./Navbar";
 import JobCard from "./JobCard";
@@ -13,8 +13,28 @@ function ChatbotInterface() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const checkTokenExpiration = (token) => {
+    if (!token) {
+      return true; 
+    }
+
+    try {
+      const decodedToken = jwtDecode(token);
+      const exp = decodedToken.exp * 1000; 
+      return Date.now() >= exp;
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      return true; 
+    }
+  };
+
   useEffect(() => {
     const token = localStorage.getItem('token');
+    if (checkTokenExpiration(token)) {
+      navigate('/login', { replace: true });
+      return;
+    }
+
     if (token) {
       const decodedToken = jwtDecode(token);
       const currentTime = Date.now() / 1000;
@@ -23,11 +43,11 @@ function ChatbotInterface() {
         navigate('/login');
       } else {
         sessionStorage.clear();
-        // Set job from navigation state if available
+        
         if (location.state && location.state.job) {
           setJob(location.state.job);
         } else {
-          navigate('/jobs'); // Redirect if no job information is available
+          navigate('/jobs'); 
         }
       }
     } else {
@@ -44,7 +64,7 @@ function ChatbotInterface() {
           <div className="search-job fixed left-0 h-[100vh] top-0 z-[10] pt-[35%] text-center flex flex-col bg-white max-sm:relative">
             <h2 className="text-start mb-6">Applied Job</h2>
             {job ? (
-              <JobCard job={job} chatBot={true} /> // Render JobCard if job is not null
+              <JobCard job={job} chatBot={true} /> 
             ) : (
               <p>Loading job information...</p>
             )}

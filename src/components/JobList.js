@@ -15,35 +15,35 @@ function JobList() {
   const [location, setLocation] = useState('');
   const [experience, setExperience] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
-  const jobsPerPage = 10;
+  const jobsPerPage = 21;
   const navigate = useNavigate();
   const { showChat, toggleChat } = useContext(ChatContext);
 
   useEffect(() => {
     const fetchJobs = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          const response = await fetch('http://localhost:8000/api/jobs/', {
-            method: 'GET',
-          });
-          const data = await response.json();
-          // Filter jobs that are ready
-          const readyJobs = data.filter(job => job.is_ready);
-          setJobs(readyJobs);
-        } catch (error) {
-          console.error('Error fetching jobs:', error);
-        }
-      } else {
-        navigate('./login');
+      try {
+        const response = await fetch('http://localhost:8000/api/jobs/', {
+          method: 'GET',
+        });
+        const data = await response.json();
+        const activeReadyJobs = data.filter(job => job.is_ready === true && job.is_active === true);
+        setJobs(activeReadyJobs);
+      } catch (error) {
+        console.error('Error fetching jobs:', error);
       }
     };
     fetchJobs();
-    toggleChat(false)
-  }, [navigate]);
+    toggleChat(false);
+  }, [toggleChat]);
 
   const handleApply = async (job) => {
     const token = localStorage.getItem('token');
+    if (!token) {
+      alert('You must be logged in to apply for a job.');
+      navigate('/login', { state: { from: window.location.pathname } });
+      return;
+    }
+
     try {
       const response = await axios.post(
         'http://localhost:8000/api/apply/',
@@ -57,7 +57,6 @@ function JobList() {
       );
       console.log(response.data);
       navigate(`/chatbot-interface`, { state: { job } });
-
     } catch (error) {
       console.error('Error applying for job:', error);
       if (error.response) {
@@ -77,13 +76,16 @@ function JobList() {
       job.job_qualification.toLowerCase().includes(experience.toLowerCase())
   );
 
+  const start = currentPage * jobsPerPage;
+  const end = start + jobsPerPage;
+  const paginatedJobs = filteredJobs.slice(start, end);
+
   return (
     <>
       <Navbar />
-
       <div className="w-full">
         <main className="py-10">
-          <div className="search-job fixed left-0 h-[100vh] top-0 z-[10] pt-[35%]  text-center flex flex-col bg-white max-sm:relative ">
+          <div className="search-job fixed left-0 h-[100vh] top-0 z-[10] pt-[35%] text-center flex flex-col bg-white max-sm:relative ">
             <h2 className="text-start ">
               Are you ready to find your dream job?
             </h2>
@@ -126,16 +128,26 @@ function JobList() {
               Search
             </button>
           </div>
-
           <div className="cards-section flex flex-wrap gap-3 items-center ml-[30%] mt-[5%]">
-            {filteredJobs.length > 0 ? (
-              filteredJobs.map((job) => (
+            {paginatedJobs.length > 0 ? (
+              paginatedJobs.map((job) => (
                 <JobCard key={job.job_id} job={job} handleApply={() => handleApply(job)} />
               ))
             ) : (
               <p className="text-center">No jobs available.</p>
             )}
           </div>
+          <ReactPaginate
+            previousLabel={'previous'}
+            nextLabel={'next'}
+            breakLabel={'...'}
+            pageCount={Math.ceil(filteredJobs.length / jobsPerPage)}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={handlePageClick}
+            containerClassName={'pagination'}
+            activeClassName={'active'}
+          />
         </main>
       </div>
     </>

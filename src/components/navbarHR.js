@@ -1,44 +1,58 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { format } from 'date-fns';
 import logo from "../assets/logo-med.svg";
-import search from "../assets/search.svg";
 import arrow from "../assets/arrow.svg";
-import defaultUserImage from "../assets/user.svg"; // Add a default user image
+import defaultUserImage from "../assets/user.svg";
+import notificationIcon from "../assets/notification.svg";
 
 function Navbar() {
-  const [showNav, setShowNav] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
   const [user, setUser] = useState(null);
+  const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem("token");
-      console.log("Retrieved token:", token);
       if (token) {
         try {
           const userId = getUserIdFromToken(token);
-          console.log("User ID from token:", userId);
-          const response = await fetch(`/api/collaborateur/${userId}/`, {  // Correct the URL here
+          const response = await fetch(`/api/users/${userId}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
-          console.log("API response status:", response.status);
           if (!response.ok) {
-            if (response.status === 404) {
-              console.error("User not found");
-            } else {
-              console.error("Failed to fetch user data, status code:", response.status);
-            }
             throw new Error("Failed to fetch user data");
           }
           const userData = await response.json();
-          console.log("Fetched user data:", userData);
           setUser(userData);
+          console.log("User data:", userData);
+          fetchNotifications(token);
         } catch (error) {
           console.error("Error fetching user data:", error);
         }
+      }
+    };
+
+    const fetchNotifications = async (token) => {
+      try {
+        console.log("Fetching notifications...");
+        const response = await fetch(`/api/notifications/`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Failed to fetch notifications");
+        }
+        const notificationsData = await response.json();
+        setNotifications(notificationsData);
+        console.log("Notifications data:", notificationsData);
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
       }
     };
 
@@ -49,7 +63,6 @@ function Navbar() {
     if (!token) return null;
     try {
       const tokenPayload = parseJwt(token);
-      console.log("Token payload:", tokenPayload);
       return tokenPayload.user_id;
     } catch (error) {
       console.error("Error parsing JWT:", error);
@@ -65,7 +78,12 @@ function Navbar() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/signin");
+    navigate("/login");
+  };
+
+  const formatNotificationDate = (dateString) => {
+    const date = new Date(dateString);
+    return format(date, "PPPP p");
   };
 
   return (
@@ -73,19 +91,10 @@ function Navbar() {
       <div className="logo flex-[1] flex items-center">
         <img src={logo} alt="Logo" />
       </div>
-      <div
-        className={
-          showNav
-            ? "flex items-center justify-between w-[80%] max-sm:shadow-xl list max-sm:hidden show"
-            : "flex justify-between items-center flex-[1.4] max-sm:hidden list"
-        }
-      >
+      <div className="flex justify-between items-center flex-[1.4] list">
         <ul className="flex items-center mb-0 p-0 gap-10 font-medium">
           <li>
             <Link to="/HomeHR">Home</Link>
-          </li>
-          <li>
-            <Link to="/add-job">Add Offer</Link>
           </li>
           <li>
             <Link to="/jobs">Jobs</Link>
@@ -106,7 +115,7 @@ function Navbar() {
               <img src={arrow} alt="Arrow" />
             </button>
             {showDropdown && (
-              <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md py-2 z-50">
+              <div className="absolute top-10 right-0 mt-2 w-48 bg-white shadow-lg rounded-md py-2 z-50">
                 <Link to="/ProfileHR" className="block px-4 py-2 text-gray-800 hover:bg-gray-200">Profile</Link>
                 <button 
                   onClick={handleLogout} 
@@ -116,24 +125,40 @@ function Navbar() {
                 </button>
               </div>
             )}
+            <button
+              className="relative"
+              onClick={() => setShowNotifications(!showNotifications)}
+            >
+              <img src={notificationIcon} alt="Notifications" className="w-6 h-6" />
+              {notifications.length > 0 && (
+                <span className="absolute top-0 right-0 inline-block w-2 h-2 bg-red-600 rounded-full"></span>
+              )}
+            </button>
+            {showNotifications && (
+              <div className="absolute top-10 right-10 mt-2 w-64 bg-white shadow-lg rounded-md py-2 z-50">
+                {notifications.length === 0 ? (
+                  <p className="px-4 py-2 text-gray-800">No new notifications</p>
+                ) : (
+                  notifications.map((notification, index) => (
+                    <div key={index} className="px-4 py-2 text-gray-800 hover:bg-gray-200">
+                      {notification.message} on {formatNotificationDate(notification.interview_date)}
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
           </div>
         ) : (
           <div className="flex items-center gap-4">
-            <Link to="/signin" className="btn text-black">
+            <Link to="/login" className="btn text-black">
               Sign In
             </Link>
-            <Link to="/signup" className="btn text-black">
+            <Link to="/register" className="btn text-black">
               Sign Up
             </Link>
           </div>
         )}
       </div>
-      <button
-        onClick={() => setShowNav(!showNav)}
-        className="bg-red-100 text-white w-fit hidden max-sm:flex max-sm:order-1"
-      >
-        <img src={search} alt="Search" />
-      </button>
     </nav>
   );
 }

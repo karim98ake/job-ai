@@ -85,6 +85,13 @@
   );
   --primary: #fd1d1d;
   --white: #fff;
+  --first-color: #fd1d1d;
+  --input-color: #80868b;
+  --border-color: #dadce0;
+  /*===== Fuente y tipografia =====*/
+  --body-font: "Roboto", sans-serif;
+  --normal-font-size: 1rem;
+  --small-font-size: 0.75rem;
 }
 ::-webkit-scrollbar {
   width: calc(var(--unit) * 12); /* Width of the entire scrollbar */
@@ -132,19 +139,22 @@ nav {
   backdrop-filter: blur(7.6px);
   -webkit-backdrop-filter: blur(7.6px);
   border: 1px solid rgba(255, 255, 255, 0.5);
-  padding: calc(var(--unit) * 15) calc(var(--unit) * 60);
+  padding: calc(var(--unit) * 10) calc(var(--unit) * 60);
   border-bottom: calc(var(--unit) * 2) black solid;
   /* margin-top: calc(var(--unit) * 10); */
 }
 .logo {
-  height: calc(var(--unit) * 60);
+  /* height: calc(var(--unit) * 30); */
   width: calc(var(--unit) * 180);
+}
+.logo img {
+  height: calc(var(--unit) * 36);
 }
 .show {
   display: flex !important;
 }
 .btn {
-  min-height: calc(var(--unit) * 56) !important;
+  min-height: calc(var(--unit) * 36) !important;
   border-radius: calc(var(--unit) * 10) !important;
   color: white !important;
   border: none !important;
@@ -222,7 +232,7 @@ nav {
     width: 80%;
   }
 }
-#rasaWebchatPro{
+#rasaWebchatPro {
   margin-left: calc(var(--unit) * 390);
   height: calc(var(--unit) * 540);
   position: absolute;
@@ -230,11 +240,11 @@ nav {
   width: 73%;
   box-shadow: none;
 }
-.rw-conversation-container{
-height: calc(var(--unit) * 590);
-box-shadow: none !important;
+.rw-conversation-container {
+  height: calc(var(--unit) * 590);
+  box-shadow: none !important;
 }
-.rw-senderd{
+.rw-senderd {
   position: fixed;
   width: 71%;
   bottom: 0%;
@@ -263,9 +273,120 @@ box-shadow: none !important;
   color: white;
   margin: 0 5px;
 }
- body.chat-active #rasaWebchatPro{
-display: block;
+body.chat-active #rasaWebchatPro {
+  display: block;
 }
- body #rasaWebchatPro{
-display: none;
+body #rasaWebchatPro {
+  display: none;
+}
+
+.form__div {
+  position: relative;
+  min-height: 52px;
+  margin-bottom: 2.2rem;
+}
+.form__div.text-area {
+  position: relative;
+  min-height: 100px;
+  margin-bottom: 1.5rem;
+}
+.form__input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  font-size: var(--normal-font-size);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  outline: none;
+  padding: 1rem;
+  background: none;
+  z-index: 1;
+}
+.form__label {
+  position: absolute;
+  left: 0.5rem;
+  top: 1rem;
+  padding: 0 1rem;
+  background-color: #fff;
+  color: var(--input-color);
+  font-size: 14px;
+  transition: 0.3s;
+}
+.form__label {
+  position: absolute;
+  left: 0.5rem;
+  top: 1rem;
+  padding: 0 1rem;
+  background-color: #fff;
+  color: var(--input-color);
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.form__button {
+  display: block;
+  margin-left: auto;
+  padding: 0.75rem 2rem;
+  outline: none;
+  border: none;
+  background-color: var(--first-color);
+  color: #fff;
+  font-size: var(--normal-font-size);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.form__button:hover {
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.15);
+}
+
+/*Input focus move up label*/
+.form__input:focus + .form__label {
+  top: -0.5rem;
+  left: 0.8rem;
+  color: var(--first-color);
+  font-size: var(--small-font-size);
+  font-weight: 500;
+  z-index: 10;
+}
+
+/*Input focus sticky top label*/
+.form__input:not(:placeholder-shown).form__input:not(:focus) + .form__label {
+  top: -0.5rem;
+  left: 0.8rem;
+  z-index: 10;
+  font-size: var(--small-font-size);
+  font-weight: 500;
+}
+
+/*Input focus*/
+.form__input:focus {
+  border: 1px solid transparent !important; /* Keep border transparent */
+  background-image: linear-gradient(white, white),
+    linear-gradient(to right, #f06, #00f); /* Define gradient here */
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  transition: border 250ms;
+  outline: none;
+}
+.submit-btn {
+  background: var(--primary) !important;
+  padding: calc(var(--unit) * 11) !important;
+  font-weight: 500 !important;
+  border: 1px solid var(--primary) !important;
+  transition: 10s linear;
+}
+.submit-btn:hover {
+  background: var(--gradiant) !important;
+  border: none !important;
+}
+
+.cancel-btn {
+  background-color: transparent !important;
+  border: 1px solid var(--primary) !important;
+  padding: calc(var(--unit) * 11) !important;
+  font-weight: 500 !important;
+  color: var(--primary) !important;
 }

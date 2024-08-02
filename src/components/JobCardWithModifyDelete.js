@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import send from '../assets/send.svg';
 import jobIcon from '../assets/job.svg';
 
-function JobCardWithModifyDelete({ job, editJob, deleteJob, checkCandidates }) {
+function JobCardWithModifyDelete({ job, editJob, deleteJob, checkCandidates, setOpenSidebar }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
 
@@ -12,7 +12,7 @@ function JobCardWithModifyDelete({ job, editJob, deleteJob, checkCandidates }) {
   };
 
   const handleEdit = (jobId) => {
-    navigate(`/edit-job/${jobId}`);
+    setOpenSidebar(true);   
   };
 
   const handleDelete = (jobId) => {
@@ -31,7 +31,7 @@ function JobCardWithModifyDelete({ job, editJob, deleteJob, checkCandidates }) {
       </div>
     );
   };
-
+  const applicationCount = job.application_count;
   return (
     <div
       key={job.job_id}
@@ -39,13 +39,13 @@ function JobCardWithModifyDelete({ job, editJob, deleteJob, checkCandidates }) {
         job.new ? 'new' : ''
       } ${job.featured ? 'featured' : ''}`}
     >
-      <div className="menu-container absolute top-0 right-0 m-2">
+      <div className="menu-container" style={{ position: 'absolute', top: 0, right: 0, margin: '2px', zIndex: 100 }}>
         <button onClick={toggleDropdown} className="flex items-center gap-2">
           <span className="font-bold">⋮</span>
         </button>
         {showDropdown && (
-          <div className="dropdown-content absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md py-2 z-50">
-            <button onClick={() => handleEdit(job.job_id)} className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left">Modify</button>
+          <div className="dropdown-content" style={{ position: 'absolute', right: 0, marginTop: '2px', width: '150px', backgroundColor: 'white', boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)', borderRadius: '4px', padding: '8px 0', zIndex: 200 }}>
+            <button onClick={() => setOpenSidebar({ type: 'edit', job })} className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left">Modify</button>
             <button onClick={() => handleDelete(job.job_id)} className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left">Delete</button>
           </div>
         )}
@@ -56,9 +56,22 @@ function JobCardWithModifyDelete({ job, editJob, deleteJob, checkCandidates }) {
       </article>
       <h3 className="text-bold">{job.job_title}</h3>
       <p className="">{job.job_description}</p>
+      {!job.is_ready && (
+        <>
+          <div
+            onClick={() => setOpenSidebar(false)}
+            className="bg-black absolute h-full opacity-[0.6] top-0 left-0 w-full"
+            style={{ zIndex: 50 }}
+          ></div>
+          <p className='z-[10000] text-white text-center'>
+            Questions still in generation
+          </p>
+        </>
+      )}
       <div className="flex flex-wrap items-center gap-1">
         <article>{job.job_qualification && tags(job.job_qualification)}</article>
       </div>
+      <p>{applicationCount} personne(s) applied for this job</p>
       {job.featured && (
         <div className="job-status featured">
           <p>featured</p>
@@ -67,6 +80,15 @@ function JobCardWithModifyDelete({ job, editJob, deleteJob, checkCandidates }) {
       {job.new && (
         <div className="job-status">
           <p>New</p>
+        </div>
+      )}
+      {job.is_active ? (
+        <div className="job-status badge-new" style={{ zIndex: 50 }}>
+          <p>New</p>
+        </div>
+      ) : (
+        <div className="job-status badge-hired" style={{ zIndex: 50 }}>
+          <p>Hired</p>
         </div>
       )}
       <button

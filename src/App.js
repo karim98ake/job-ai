@@ -19,8 +19,6 @@ import ProfileHR from './components/ProfileHR';
 import ModifyHR from './components/ModifyHR';
 
 
-
-
 export const ChatContext = createContext();
 
 export const ChatProvider = ({ children }) => {
@@ -29,11 +27,14 @@ export const ChatProvider = ({ children }) => {
   const toggleChat = (boolean) => {
     setShowChat(boolean);
   };
+
+  
   useEffect(() => {
     if (showChat) {
-      document.body.classList.add('chat-active'); // Add class when chat is shown
+      document.body.classList.add('chat-active'); 
     } else {
-      document.body.classList.remove('chat-active'); // Remove class when chat is hidden
+      document.body.classList.remove('chat-active'); 
+
     }
   }, [showChat]);
 
@@ -47,41 +48,50 @@ export const ChatProvider = ({ children }) => {
 function App() {
   return (
     <Router>
-            <ChatProvider>
+      <ChatProvider>
+        <Routes>
+        <Route path="/job-list" element={<JobList />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path='/add-job' element={
+            <ProtectedRoute redirectTo="/login" requiredRole="professional">
+              <AddJobForm />
+            </ProtectedRoute>
+          }/>
+          <Route path="/login" element={<Login />} />
+          <Route path="/HomeHR" element={<HomeHR />} />
+          <Route path="/Register" element={<Register />} />
+          <Route path="/chatbot-interface" element={
+            <ProtectedRoute redirectTo="/login" requiredRole="candidate">
+              <ChatbotInterface />
+            </ProtectedRoute>
+          } />
+          <Route path="/login" element={<SignUpForm />} /> 
+          <Route path="/login" element={<SignInForm />} />
+          <Route path="/edit-job/:jobId" element={<EditJobForm />} />
+          <Route path="/modify-user" element={<ModifyUser />} />
+          <Route path="/modify-collaborateur" element={<ModifyHR />} />
+          <Route path="/jobs" element={
+            <ProtectedRoute redirectTo="/login" requiredRole="professional">
+              <JobListRH />
+            </ProtectedRoute>
+          } />
+          <Route path="/Profile" element={
+            <ProtectedRoute redirectTo="/login" requiredRole="candidate">
+              <Profile/>
+            </ProtectedRoute>
+          } />
+          <Route path="/ProfileHR" element={
+            <ProtectedRoute redirectTo="/login" requiredRole="professional">
+              <ProfileHR/>
+            </ProtectedRoute>
+          } />
+          <Route path="/jobs/:jobId/candidates" element={
+            <ProtectedRoute redirectTo="/login" requiredRole="professional">
+              <CandidateList />
+            </ProtectedRoute>
+          } />
+        </Routes>
 
-      <Routes>
-        <Route path="/job-list" element={
-          <ProtectedRoute redirectTo="/login"><JobList /></ProtectedRoute>
-        } />
-        <Route path="/" element={<HomePage />} />
-        <Route path='/add-job' element={
-          <ProtectedRoute redirectTo="/signin"><AddJobForm /></ProtectedRoute>
-        }/>
-        <Route path="/login" element={<Login />} />
-        <Route path="/HomeHR" element={<HomeHR />} />
-        <Route path="/Register" element={<Register />} />
-        <Route path="/chatbot-interface" element={
-          <ProtectedRoute redirectTo="/login"><ChatbotInterface /></ProtectedRoute>
-        } />
-        <Route path="/signup" element={<SignUpForm />} /> 
-        <Route path="/signin" element={<SignInForm />} />
-        <Route path="/edit-job/:jobId" element={<EditJobForm />} />
-        <Route path="/modify-user" element={<ModifyUser />} />
-        <Route path="/modify-collaborateur" element={<ModifyHR />} />
-        <Route path="/jobs" element={
-          <ProtectedRoute redirectTo="/signin"><JobListRH /></ProtectedRoute>
-        } />
-        <Route path="/Profile" element={
-          <ProtectedRoute redirectTo="/login"><Profile/></ProtectedRoute>
-        } />
-        <Route path="/ProfileHR" element={
-          <ProtectedRoute redirectTo="/signin"><ProfileHR/></ProtectedRoute>
-        } />
-        
-        <Route path="/jobs/:jobId/candidates" element={
-          <ProtectedRoute redirectTo="/signin"><CandidateList /></ProtectedRoute>
-        } />
-      </Routes>
       </ChatProvider>
     </Router>
   );
