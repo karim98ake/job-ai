@@ -10,10 +10,37 @@ import {
 } from "./ui/card";
 import "./profile.css";
 
+const parseJwt = (token) => {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(atob(base64));
+  } catch (error) {
+    console.error("Error parsing JWT:", error);
+    return null;
+  }
+};
+
+const checkTokenExpiration = (token) => {
+  if (!token) {
+    return true;
+  }
+
+  try {
+    const decodedToken = parseJwt(token);
+    const exp = decodedToken.exp * 1000;
+    return Date.now() >= exp;
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return true;
+  }
+};
+
 function ModifyUser() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = location.state || {};
+  const [role, setRole] = useState(null);
   const [formData, setFormData] = useState({
     first_name: user ? user.first_name : "",
     last_name: user ? user.last_name : "",
@@ -25,12 +52,31 @@ function ModifyUser() {
   });
   const [previewImage, setPreviewImage] = useState(null);
   const [cvName, setCvName] = useState(
+<<<<<<< HEAD
     user && user.cv ? user.cv.split("/").pop() : "No CV uploaded"
+=======
+    user && user.cv ? user.cv.split('/').pop() : 'No CV uploaded'
+>>>>>>> d1991f9a2ebcfa37f146d6bd8cd8b387591a2b2d
   );
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (checkTokenExpiration(token)) {
+      navigate('/signin', { replace: true });
+      return;
+    }
+
+    const decodedToken = parseJwt(token);
+    if (decodedToken) {
+      setRole(decodedToken.role);
+    }
+
     if (!user) {
+<<<<<<< HEAD
       navigate("/"); // Redirect to home if no user data is available
+=======
+      navigate('/'); 
+>>>>>>> d1991f9a2ebcfa37f146d6bd8cd8b387591a2b2d
     }
     if (user && user.image) {
       setPreviewImage(user.image);
@@ -41,7 +87,11 @@ function ModifyUser() {
     const { name, value, files } = e.target;
     if (name === "cv" || name === "image") {
       setFormData({ ...formData, [name]: files[0] });
+<<<<<<< HEAD
       if (name === "image") {
+=======
+      if (name === 'image') {
+>>>>>>> d1991f9a2ebcfa37f146d6bd8cd8b387591a2b2d
         const file = files[0];
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -49,8 +99,13 @@ function ModifyUser() {
         };
         reader.readAsDataURL(file);
       }
+<<<<<<< HEAD
       if (name === "cv") {
         setCvName(files[0] ? files[0].name : "No CV uploaded");
+=======
+      if (name === 'cv') {
+        setCvName(files[0] ? files[0].name : 'No CV uploaded');
+>>>>>>> d1991f9a2ebcfa37f146d6bd8cd8b387591a2b2d
       }
     } else {
       setFormData({ ...formData, [name]: value });

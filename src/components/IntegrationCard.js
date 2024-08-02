@@ -1,8 +1,8 @@
 import React from 'react';
 import { Card, CardContent, CardFooter } from './ui/card';
-import { Button } from './ui/button';
+import './IntegrationCard.css'; 
 
-const IntegrationCard = ({ imgSrc, title, subtitle, description, installedCount }) => {
+const IntegrationCard = ({ imgSrc, title, subtitle, description, installedCount, isActive }) => {
     return (
         <Card className="p-3">
             <CardContent className="flex flex-col gap-4">
@@ -17,6 +17,13 @@ const IntegrationCard = ({ imgSrc, title, subtitle, description, installedCount 
                             <i className="fa fa-star"></i>
                             <i className="fa fa-star"></i>
                         </span>
+                    </div>
+                    <div className="status-badge ml-auto">
+                        {isActive ? (
+                            <span className="badge-new">New</span>
+                        ) : (
+                            <span className="badge-hired">Hired</span>
+                        )}
                     </div>
                 </div>
                 <h6>{description}</h6>

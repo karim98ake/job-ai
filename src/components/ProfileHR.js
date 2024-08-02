@@ -31,6 +31,21 @@ const parseJwt = (token) => {
   }
 };
 
+const checkTokenExpiration = (token) => {
+  if (!token) {
+    return true;
+  }
+
+  try {
+    const decodedToken = JSON.parse(atob(token.split('.')[1]));
+    const exp = decodedToken.exp * 1000;
+    return Date.now() >= exp;
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return true;
+  }
+};
+
 function Profile() {
   const [user, setUser] = useState(null);
   const [role, setRole] = useState(null);
@@ -70,13 +85,21 @@ function Profile() {
         }
       } else {
         setLoading(false);
+<<<<<<< HEAD
         navigate('/login', { replace: true });
+=======
+        navigate('/signin', { replace: true });
+>>>>>>> d1991f9a2ebcfa37f146d6bd8cd8b387591a2b2d
       }
     };
 
     fetchUser();
+<<<<<<< HEAD
     toggleChat(false);
   }, [navigate, toggleChat]);
+=======
+  }, [navigate]);
+>>>>>>> d1991f9a2ebcfa37f146d6bd8cd8b387591a2b2d
 
   function getUserIdFromToken(token) {
     if (!token) return null;
@@ -106,7 +129,11 @@ function Profile() {
   };
 
   const handleCancelClick = () => {
+<<<<<<< HEAD
     navigate('/job-list');
+=======
+    navigate('/login');
+>>>>>>> d1991f9a2ebcfa37f146d6bd8cd8b387591a2b2d
   };
 
   return (
@@ -125,7 +152,11 @@ function Profile() {
               <div className="flex gap-6 max-sm:flex-col mb-4">
                 <div className="w-[20%] max-sm:w-full h-[200px] border border-gray-400 rounded-lg relative mb-4 p-4">
                   <div className="text-center">
+<<<<<<< HEAD
                     <img src={user.image || '/assets/images/personne.png'} className="avatar img-circle img-thumbnail" alt="Profile" />
+=======
+                    <img src={user.image || 'https://bootdey.com/img/Content/avatar/avatar7.png'} className="avatar img-circle img-thumbnail" alt="Profile" />
+>>>>>>> d1991f9a2ebcfa37f146d6bd8cd8b387591a2b2d
                   </div>
                 </div>
                 <div className="w-[80%] max-sm:w-full">
@@ -162,6 +193,7 @@ function Profile() {
                       />
                       <label className="form__label">Email</label>
                     </div>
+<<<<<<< HEAD
                     <div className="form__div mb-0 flex-1">
                       <input
                         className="form__input w-full"
@@ -204,6 +236,8 @@ function Profile() {
                         <a href={user.cv} target="_blank" rel="noopener noreferrer">View current CV</a>
                       </div>
                     )}
+=======
+>>>>>>> d1991f9a2ebcfa37f146d6bd8cd8b387591a2b2d
                   </div>
                 </div>
               </div>

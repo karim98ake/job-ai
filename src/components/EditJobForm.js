@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import close from "../assets/close.svg";
+<<<<<<< HEAD
+=======
+import { useNavigate } from "react-router-dom";
+>>>>>>> d1991f9a2ebcfa37f146d6bd8cd8b387591a2b2d
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Card, CardTitle } from "./ui/card";
@@ -8,9 +12,17 @@ import "./profile.css";
 
 const EditJobForm = ({ setOpenSidebar, openSidebar }) => {
   const [job, setJob] = useState(openSidebar.job);
+<<<<<<< HEAD
 
   useEffect(() => {
     if (openSidebar.job) {
+=======
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (openSidebar.job) {
+      
+>>>>>>> d1991f9a2ebcfa37f146d6bd8cd8b387591a2b2d
       axios.get(`/api/get-job/${openSidebar.job.job_id}/`)
         .then(response => {
           setJob(response.data);
@@ -29,6 +41,10 @@ const EditJobForm = ({ setOpenSidebar, openSidebar }) => {
       await axios.post(`/api/edit-job/${job.job_id}/`, job);
       toast.success("Job edited successfully.");
       setOpenSidebar(false);
+<<<<<<< HEAD
+=======
+      
+>>>>>>> d1991f9a2ebcfa37f146d6bd8cd8b387591a2b2d
     } catch (error) {
       console.error("Error editing job:", error);
       toast.error("Error editing job.");
@@ -176,7 +192,11 @@ const EditJobForm = ({ setOpenSidebar, openSidebar }) => {
               onChange={handleChange}
               placeholder=" "
             />
+<<<<<<< HEAD
             <label className="form__label">Number of posts</label>
+=======
+            <label className="form__label">number of posts</label>
+>>>>>>> d1991f9a2ebcfa37f146d6bd8cd8b387591a2b2d
           </div>
 
           <div className="fixed bottom-0 py-2 right-[0.3%] w-[34%] max-sm:w-full shadow-lg flex justify-center items-center gap-4 z-10 bg-white">
@@ -195,6 +215,10 @@ const EditJobForm = ({ setOpenSidebar, openSidebar }) => {
       </Card>
     </div>
   );
+<<<<<<< HEAD
 }
+=======
+};
+>>>>>>> d1991f9a2ebcfa37f146d6bd8cd8b387591a2b2d
 
 export default EditJobForm;

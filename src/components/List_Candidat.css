@@ -19,13 +19,24 @@
 }
 
 .candidate-list {
-    list-style: none;
-    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem; /* Ajoute un espace entre les cartes */
 }
 
 .candidate-item {
-    margin-bottom: 20px;
+    flex: 1 1 calc(50% - 1rem); /* Prend 50% de la largeur moins l'espace */
+    max-width: calc(50% - 1rem);
 }
+
+@media (max-width: 768px) {
+    .candidate-item {
+        flex: 1 1 100%; /* Sur mobile, les cartes prennent 100% de la largeur */
+        max-width: 100%;
+    }
+}
+
+
 
 .candidate-card {
     border: 1px solid #e0e0e0;
@@ -37,3 +48,15 @@
 .candidate-card p {
     margin: 10px 0;
 }
+/* Add this to ensure PopoverContent and Calendar have proper styling */
+.popover-content {
+    z-index: 50;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .calendar {
+    padding: 8px;
+    background-color: white;
+    border-radius: 8px;
+  }
+  

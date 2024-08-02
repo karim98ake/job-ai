@@ -21,4 +21,18 @@
   .job-card-rh .job-status {
     background-color: #0066cc !important;
   }
-  
+
+.badge-new {
+  background-color: green;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+
+.badge-hired {
+  background-color: black;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+}

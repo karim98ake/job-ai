@@ -18,7 +18,10 @@ import HomeHR from './components/HomeHR';
 import ProfileHR from './components/ProfileHR';
 import ModifyHR from './components/ModifyHR';
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> d1991f9a2ebcfa37f146d6bd8cd8b387591a2b2d
 export const ChatContext = createContext();
 
 export const ChatProvider = ({ children }) => {
@@ -27,14 +30,20 @@ export const ChatProvider = ({ children }) => {
   const toggleChat = (boolean) => {
     setShowChat(boolean);
   };
+<<<<<<< HEAD
 
+=======
+>>>>>>> d1991f9a2ebcfa37f146d6bd8cd8b387591a2b2d
   
   useEffect(() => {
     if (showChat) {
       document.body.classList.add('chat-active'); 
     } else {
       document.body.classList.remove('chat-active'); 
+<<<<<<< HEAD
 
+=======
+>>>>>>> d1991f9a2ebcfa37f146d6bd8cd8b387591a2b2d
     }
   }, [showChat]);
 
@@ -91,7 +100,10 @@ function App() {
             </ProtectedRoute>
           } />
         </Routes>
+<<<<<<< HEAD
 
+=======
+>>>>>>> d1991f9a2ebcfa37f146d6bd8cd8b387591a2b2d
       </ChatProvider>
     </Router>
   );

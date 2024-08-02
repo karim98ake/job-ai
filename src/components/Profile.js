@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from './Navbar';
+import Navbar from './navbarHR';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card';
 import './profile.css';
 import { ChatContext } from '../App';
